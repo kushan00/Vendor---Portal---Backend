@@ -4,47 +4,37 @@ const jwt = require("jsonwebtoken");
 const uniqueID = require("../helpers/uniqueID");
 const apiResponse = require("../helpers/apiResponse");
 
-const User = require("../models/userModel.js");
 const Admin = require("../models/adminModel.js");
-const Instructor = require("../models/instructorModel.js");
+
 
 var jwtSecret = "mysecrettoken";
 
-const registerUser = async (req, res) => {
+const registerAdmin = async (req, res) => {
 
   const { 
         fullName, 
         email, 
         password,  
-        mobileno, 
-        dateOfBirth,
-        weight,
-        height,    
+        mobileno,   
     } = req.body;
 
 
     
   try {
     // See if user exists
-    let user = await User.findOne({ email });
+    let user = await Admin.findOne({ email });
 
     if (user) {
       apiResponse.AlreadyExists(res,"User already exists",{user : user?.fullName});
       return 0; 
     }
 
-    // generating user unique gym id
-    var gym_id = await uniqueID.generateID();
 
-    user = new User({
-        gym_id,
+    user = new Admin({
         fullName, 
         email, 
         password,  
         mobileno, 
-        dateOfBirth,
-        weight,
-        height, 
     });
 
     //Encrypt Password
@@ -71,21 +61,13 @@ const registerUser = async (req, res) => {
   }
 };
 
-const authUser = async (req, res) => {
+const authAdmin = async (req, res) => {
   try {
-    let user = await User.findById(req.user.id);
+    let user = await Admin.findById(req.user.id);
     if (!user) 
-    {
-        user = await Admin.findById(req.user.id);
-        if(!user)
-        {
-            user = await Instructor.findById(req.user.id);
-            if(!user)
-            {
-                apiResponse.NotFound(res,"Token expired or null",{ err: "Error" })
-                return 0;  
-            }
-        }
+    {    
+      apiResponse.NotFound(res,"Token expired or null",{ err: "Error" })
+      return 0;      
     }
     apiResponse.Success(res,"Auth Success",{ user: user })
   } catch (err) {
@@ -94,26 +76,18 @@ const authUser = async (req, res) => {
   }
 };
 
-const loginUser = async (req, res) => {
+const loginAdmin = async (req, res) => {
 
   const { email, password } = req.body;
 
   try {
     // See if user exists
-    let user = await User.findOne({ email });
+    let user = await Admin.findOne({ email });
 
     if (!user) 
     {
-        user = await Admin.findOne({ email });
-        if(!user)
-        {
-            user = await Instructor.findOne({ email });
-            if(!user)
-            {
-                apiResponse.NotFound(res,"Invalid Credentials",{ err: "Error" })
-                return 0; 
-            }
-        }
+      apiResponse.NotFound(res,"Invalid Credentials",{ err: "Error" })
+      return 0; 
     }
   
 
@@ -166,8 +140,8 @@ const updateAdmin = async (req, res) => {
 
 
 module.exports = {
-  registerUser,
-  authUser,
-  loginUser,
-  updateAdmin
+  registerAdmin,
+  authAdmin,
+  loginAdmin,
+  updateAdmin,
 };

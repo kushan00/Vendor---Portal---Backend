@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const auth = require("../middlewares/auth");
 const { check } = require("express-validator");
-const { registerUser ,authUser , loginUser , updateAdmin } = require("../controllers/AuthControllers.js"); 
+const { registerAdmin ,authAdmin , loginAdmin , updateAdmin } = require("../controllers/AuthControllers.js"); 
 
 
 router.post("/signup",
@@ -13,9 +13,9 @@ router.post("/signup",
 			"Please enter password with 8 or more characters"
 		).isLength({ min: 8 }),
 	],
-	registerUser);
+	registerAdmin);
 
-router.get("/auth", auth,authUser);
+router.get("/auth", auth,authAdmin);
 
 router.post(
 	"/signin",
@@ -23,7 +23,7 @@ router.post(
 		check("email", "Please include a valid email").isEmail(),
 		check("password", "Password is required").exists(),
 	],
-	loginUser);
+	loginAdmin);
 
 router.put("/update-admin/:id",updateAdmin);
 

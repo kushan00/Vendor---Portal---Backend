@@ -1,34 +1,25 @@
+const util = require("util");
+const path = require("path");
 const multer = require("multer");
-const Path = require('path');
 
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "./uploads");
+  destination: function (_req, _file, cb) {
+      cb(null, '../frontend/src/components/image');
   },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + "--" + file.originalname);
-  },
+  filename: function (_req, file, cb) {
+      cb(null, uuidv4() + '-' + Date.now() + path.extname(file.originalname));
+  }
 });
 
-const fileFilter = (req, file, callback) => {
-  console.log("file",file);
-  const acceptableExtensions = [".png", ".jpg", ".mp4"];
-  if (!acceptableExtensions.includes(Path.extname(file.originalname))) {
-    return callback(new Error("Only .png, .jpg and .jpeg format allowed!"));
+const fileFilter = (_req, file, cb) => {
+  const allowedFileTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+  if (allowedFileTypes.includes(file.mimetype)) {
+      cb(null, true);
+  } else {
+      cb(null, false);
   }
+}
 
-  const fileSize = parseInt(req.headers["content-length"]);
-  if (fileSize > 1048576) {
-    return callback(new Error("File Size Big"));
-  }
-
-  callback(null, true);
-};
-
-let upload = multer({
-  storage: storage,
-  fileFilter: fileFilter,
-  fileSize: 1048576, // 10 Mb
-});
-
-module.exports = upload.single("productImage");
+let upload = multer({ storage, fileFilter });
+var uploadFilesMiddleware = util.promisify(upload);
+module.exports = uploadFilesMiddleware;
