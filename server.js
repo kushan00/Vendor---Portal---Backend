@@ -53,7 +53,7 @@ mongoose.connect(
 
 //import routes
 const Auth = require("./routes/AuthRoutes");
-
+const Product = require("./routes/productRoutes");
 
 
 //
@@ -64,4 +64,5 @@ const Auth = require("./routes/AuthRoutes");
 app.use("/vendor-portal",Auth);
 
 
-
+//Product Management routes
+app.use("/vendor-portal/product",Product);

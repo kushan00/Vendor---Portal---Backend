@@ -5,19 +5,25 @@ const Product = require("../controllers/productController.js");
 const path = require("path");
 const multer = require("multer");
 
+/**
+ * 
+ * multer multiple image uplaod function
+ * 
+ */
 var storage = multer.diskStorage({
-  destination: (req, file, callback) => {
-    callback(null, path.join(`../frontend/src/assets/images`));
+  destination: (req, file, cb) => {
+      cb(null, '../frontend/src/assets/images')
   },
-  filename: (req, file, callback) => {
-    var filename = `${Date.now()}-bezkoder-${file.originalname}`;
-    callback(null, filename);
+  filename: (req, file, cb) => {
+     //rename filename to avoid name duplication
+     var fileName = `${Date.now()}-${file.originalname}`;
+      cb(null, fileName)
   }
-});
+})
 
-var uploadFiles = multer({ storage: storage })
+var upload = multer({ storage: storage });
 
-router.post("/add",uploadFiles.array("images",10),Product.addProduct);
+router.post("/add",upload.array("products",10),Product.addProduct);
 router.get("/get-product/:id",Product.getProduct);
 router.get("/get-all",Product.getProducts);
 router.get("/search/:searchTerm",Product.searchProduct);

@@ -1,27 +1,26 @@
 const Product = require("../models/productModel")
 let path = require('path');
 const apiResponse = require("../helpers/apiResponse");
-const upload = require("../middlewares/upload");
 
 exports.addProduct = async (req, res) => {
 
-  var imagesArray = [];
-  req.files.map(async (file) => {
-    imagesArray.add(file.filename);
-   });
+  // var imagesArray = [];
+  // req.files.map(async (file) => {
+  //   imagesArray.add(file.filename);
+  //  });
 
   try {
     const newProduct = new Product({
       SKU: req.body.SKU,
       quantity: req.body.quantity,
-      images: imagesArray,
+      images: req.files,
       productName: req.body.productName,
       productDescription: req.body.productDescription,
     });
 
    await newProduct.save();
 
-   apiResponse.Success(res,"Product Added Successfully", {data:newProduct});
+   apiResponse.Success(res,"Product Added Successfully", {data:newProduct}); 
   } catch (err) {
     apiResponse.ServerError(res,"Server Error",{err:err});
   }
