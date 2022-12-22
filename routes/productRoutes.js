@@ -26,7 +26,7 @@ var upload = multer({ storage: storage });
 router.post("/add",upload.array("products",10),Product.addProduct);
 router.get("/get-product/:id",Product.getProduct);
 router.get("/get-all",Product.getProducts);
-router.get("/search/:searchTerm",Product.searchProduct);
+router.get("/search/:id",Product.searchProduct);
 router.put("/update-product/:id",Product.updateProduct);
 router.delete("/delete-product/:id",Product.deleteProduct)
 

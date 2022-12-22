@@ -55,13 +55,15 @@ exports.getProducts = async (req, res) => {
  */
 exports.searchProduct = async (req, res) => {
   try {
+    console.log(req.params.id);
     const details = await Product.find({
       $or: [
         {
-            productName: { $regex: req.params.searchTerm },
+            productName: { $regex: req.params.id },
         },
       ],
     });
+    console.log("search data",details);
     apiResponse.Success(res,"Search Success", {data:details});
   } catch (error) {
     apiResponse.ServerError(res,"Server Error",{err:error});

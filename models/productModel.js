@@ -21,6 +21,10 @@ const ProductSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
+	price:{
+		type:String,
+		default:"$20"
+	}
 },
 {
     timestamps: true,
