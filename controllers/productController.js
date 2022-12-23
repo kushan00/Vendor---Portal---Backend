@@ -4,10 +4,11 @@ const apiResponse = require("../helpers/apiResponse");
 
 exports.addProduct = async (req, res) => {
 
-  // var imagesArray = [];
-  // req.files.map(async (file) => {
-  //   imagesArray.add(file.filename);
-  //  });
+  var imagesArray = [];
+  req.files.map(async (file) => {
+    file.filename = "http://localhost:5000/public/" + file.filename;
+    console.log(file.filename);
+   });
 
   try {
     const newProduct = new Product({
@@ -73,12 +74,12 @@ exports.searchProduct = async (req, res) => {
 
 exports.updateProduct = async (req, res) => {
   const { id } = req.params;
-
+  console.log(req.body,req.files);
   const filter = { _id: id };
   const update = { 
     SKU: req.body.SKU,
     quantity: req.body.quantity,
-    images: req.file.filename,
+    images: req.files,
     productName: req.body.productName,
     productDescription: req.body.productDescription, 
       };
@@ -103,7 +104,7 @@ exports.deleteProduct = async (req, res) => {
   
   let data = await Product.findOneAndDelete(filter);
   console.log(data);
-  apiResponse.Success(res,"Product Details Updated", {data:data});
+  apiResponse.Success(res,"Product Details Deleted", {data:data});
 
   } catch (error) {
     apiResponse.ServerError(res,"Server Error",{err:error});

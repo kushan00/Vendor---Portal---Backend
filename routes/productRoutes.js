@@ -12,7 +12,7 @@ const multer = require("multer");
  */
 var storage = multer.diskStorage({
   destination: (req, file, cb) => {
-      cb(null, '../frontend/src/assets/images')
+      cb(null, 'public')
   },
   filename: (req, file, cb) => {
      //rename filename to avoid name duplication
@@ -27,7 +27,7 @@ router.post("/add",upload.array("products",10),Product.addProduct);
 router.get("/get-product/:id",Product.getProduct);
 router.get("/get-all",Product.getProducts);
 router.get("/search/:id",Product.searchProduct);
-router.put("/update-product/:id",Product.updateProduct);
+router.put("/update-product/:id",upload.array("products",10),Product.updateProduct);
 router.delete("/delete-product/:id",Product.deleteProduct)
 
 module.exports = router;

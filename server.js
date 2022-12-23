@@ -18,6 +18,9 @@ const app = express();
 /* A middleware that parses the body of the request and makes it available in the req.body property. */
 app.use(express.json());
 
+/* Show all static images in public folder */
+app.use('/public', express.static('public'));
+
 /* Allowing the server to accept requests from the client. */
 app.use(
   cors({
